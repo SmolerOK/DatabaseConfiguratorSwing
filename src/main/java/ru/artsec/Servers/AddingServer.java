@@ -4,45 +4,59 @@ import ru.artsec.ConnectionDatabase;
 import ru.artsec.MainWindow;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Objects;
 
 public class AddingServer extends JDialog {
     private JPanel contentPane;
     private JButton buttonSave;
     private JButton buttonCancel;
+
+
     private JTextField textNameServer;
     private JTextField textIPServer;
     private JTextField textPortServer;
     private JCheckBox isActiveCheckBox;
     MainWindow mainWindow = new MainWindow();
+    Servers servers = new Servers();
     Statement statement = ConnectionDatabase.getConnection().createStatement();
 
     public AddingServer() throws SQLException {
         setContentPane(contentPane);
         setModal(true);
-        getRootPane().setDefaultButton(buttonSave);
 
         buttonSave.addActionListener(e -> {
-
+            try {
+                saveServer();
+                this.dispose();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         });
 
         buttonCancel.addActionListener(e -> dispose());
     }
 
     private void saveServer() throws SQLException {
-        JTree jTree = mainWindow.getTree1();
-        DefaultMutableTreeNode selectNode = (DefaultMutableTreeNode) Objects.requireNonNull(jTree.getSelectionPath()).getLastPathComponent();
-        DefaultMutableTreeNode setNode = new DefaultMutableTreeNode(textNameServer.getText());
+        int value = 0;
+        int selected = 0;
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM ALL_SERVERS");
+        while (resultSet.next()) {
+            value = resultSet.getInt("ID_SERVER");
+        }
 
-        statement.execute("INSERT INTO ALL_SERVERS");
+        if (isActiveCheckBox.isSelected())
+            selected = 1;
 
-        selectNode.add(setNode);
-        DefaultTreeModel defaultTreeModel = (DefaultTreeModel) jTree.getModel();
-        defaultTreeModel.reload();
+        statement.execute("" +
+                "INSERT INTO ALL_SERVERS (ID_SERVER, NAME_SERVER, IP_SERVER, PORT_SERVER, IS_ACTIVE_SERVER)" +
+                " VALUES (" + value + 1 + ", '" + textNameServer.getText() + "', '" + textIPServer.getText() + "', '" + textPortServer.getText() + "', " + selected + ");"
+        );
+    }
+
+    public JTextField getTextNameServer() {
+        return textNameServer;
     }
 
     public static void main(String[] args) throws SQLException {

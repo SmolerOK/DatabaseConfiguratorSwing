@@ -39,28 +39,7 @@ public class MainWindow extends JDialog {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                DefaultMutableTreeNode selectNode = (DefaultMutableTreeNode) Objects.requireNonNull(tree1.getSelectionPath()).getLastPathComponent();
-                DefaultMutableTreeNode setNode = new DefaultMutableTreeNode(textArea1.getText());
-
-                try {
-                    ResultSet result = statement.executeQuery("" +
-                            "SELECT ID_SERVERS" +
-                            " FROM SERVERS");
-                    int res = 0;
-                    while (result.next()) {
-                        res = result.getInt(1);
-                    }
-
-                    statement.execute("" +
-                            "INSERT INTO SERVERS (ID_SERVERS,SERVER_NAME)" +
-                            " VALUES ('" + (res + 1) + "','" + setNode + "')");
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
-
-                selectNode.add(setNode);
-                DefaultTreeModel defaultTreeModel = (DefaultTreeModel) tree1.getModel();
-                defaultTreeModel.reload();
+                reloadJTree();
             }
         });
 
@@ -119,8 +98,8 @@ public class MainWindow extends JDialog {
         });
     }
 
-    public JTree getTree1() {
-        return tree1;
+    public void reloadJTree() {
+
     }
 
     public static void main(String[] args) throws SQLException {

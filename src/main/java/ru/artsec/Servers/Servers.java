@@ -1,6 +1,7 @@
 package ru.artsec.Servers;
 
 import ru.artsec.ConnectionDatabase;
+import ru.artsec.JTreeReload;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -15,7 +16,7 @@ public class Servers {
 
     Statement statement = ConnectionDatabase.getConnection().createStatement();
     DefaultMutableTreeNode servers = new DefaultMutableTreeNode("Серверы");
-
+    boolean flagCreateOrEdit = false;
 
     public Servers() throws SQLException {
     }
@@ -31,12 +32,17 @@ public class Servers {
     }
 
     public void popupMenuServer(JTree jTree) {
-        JPopupMenu jPopupMenu = new JPopupMenu("Create");
+
+        JPopupMenu jPopupMenuCreate = new JPopupMenu("Create");
         JMenuItem create = new JMenuItem("Создать сервер");
-        jPopupMenu.add(create);
+        jPopupMenuCreate.add(create);
+
+        JPopupMenu jPopupMenuEdit = new JPopupMenu("Create");
+        JMenuItem edit = new JMenuItem("Изменить");
+        jPopupMenuEdit.add(edit);
 
         create.addActionListener(e -> {
-            AddingServer addingServer = null;
+            AddingServer addingServer;
             try {
                 addingServer = new AddingServer();
             } catch (SQLException ex) {
@@ -44,6 +50,12 @@ public class Servers {
             }
             addingServer.pack();
             addingServer.setVisible(true);
+
+            JTreeReload jTreeReload = new JTreeReload(jTree, addingServer.getTextNameServer());
+        });
+
+        edit.addActionListener(e -> {
+
         });
 
         jTree.addMouseListener(new MouseAdapter() {
@@ -52,9 +64,15 @@ public class Servers {
                 DefaultMutableTreeNode selectNode = (DefaultMutableTreeNode) Objects.requireNonNull(jTree.getSelectionPath()).getLastPathComponent();
                 String select = String.valueOf(selectNode);
                 if (SwingUtilities.isRightMouseButton(e) && select.equals("Серверы")) {
-                    jPopupMenu.show(jTree, e.getX(), e.getY());
+                    jPopupMenuCreate.show(jTree, e.getX(), e.getY());
+                } else if (SwingUtilities.isRightMouseButton(e) && select.equals(select)) {
+                    jPopupMenuEdit.show(jTree, e.getX(), e.getY());
                 }
             }
         });
+    }
+
+    public boolean isFlagCreateOrEdit() {
+        return flagCreateOrEdit;
     }
 }
