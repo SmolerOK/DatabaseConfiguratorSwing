@@ -5,7 +5,9 @@
     <constraints>
       <xy x="48" y="54" width="548" height="548"/>
     </constraints>
-    <properties/>
+    <properties>
+      <preferredSize width="500" height="500"/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="e3588" binding="jPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
