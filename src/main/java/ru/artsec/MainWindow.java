@@ -15,11 +15,6 @@ public class MainWindow extends JDialog {
     private JPanel contentPane;
     private JButton buttonCreate;
     private JButton buttonRemove;
-
-    public JTree getTree1() {
-        return tree1;
-    }
-
     private JTree tree1;
     private JTextArea textArea1;
     private JButton renameButton;
@@ -38,60 +33,6 @@ public class MainWindow extends JDialog {
 
         root.add(servers.addServers(tree1));
         servers.popupMenuServer(tree1);
-
-        renameButton.addActionListener(e -> {
-
-            DefaultMutableTreeNode selectNode = (DefaultMutableTreeNode) Objects.requireNonNull(tree1.getSelectionPath()).getLastPathComponent();
-
-            try {
-                ResultSet result = statement.executeQuery("" +
-                        "SELECT ID_SERVERS " +
-                        "FROM SERVERS " +
-                        "WHERE SERVER_NAME = '" + selectNode + "';");
-                int res = 0;
-                while (result.next()) {
-                    res = result.getInt(1);
-                }
-
-                statement.executeUpdate("" +
-                        " UPDATE servers" +
-                        " SET server_name = '" + textArea1.getText() + "'" +
-                        " WHERE id_servers = " + res + ";");
-
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-
-            selectNode.setUserObject(textArea1.getText());
-            DefaultTreeModel defaultTreeModel = (DefaultTreeModel) tree1.getModel();
-            defaultTreeModel.reload();
-        });
-
-        buttonRemove.addActionListener(e -> {
-
-            DefaultMutableTreeNode selectNode = (DefaultMutableTreeNode) Objects.requireNonNull(tree1.getSelectionPath()).getLastPathComponent();
-
-            try {
-                ResultSet result = statement.executeQuery("" +
-                        "SELECT ID_SERVERS " +
-                        "FROM SERVERS " +
-                        "WHERE SERVER_NAME = '" + selectNode + "';");
-                int res = 0;
-                while (result.next()) {
-                    res = result.getInt(1);
-                }
-
-                statement.execute("" +
-                        "DELETE FROM SERVERS" +
-                        " WHERE ID_SERVERS = '" + res + "'");
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-
-            DefaultTreeModel defaultTreeModel = (DefaultTreeModel) tree1.getModel();
-            defaultTreeModel.removeNodeFromParent(selectNode);
-            defaultTreeModel.reload();
-        });
     }
 
     public static void main(String[] args) throws SQLException {

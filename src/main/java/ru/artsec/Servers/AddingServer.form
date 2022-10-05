@@ -123,6 +123,14 @@
               <text value="Активность"/>
             </properties>
           </component>
+          <component id="edc39" class="javax.swing.JLabel" binding="idView">
+            <constraints>
+              <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value=""/>
+            </properties>
+          </component>
         </children>
       </grid>
     </children>

@@ -1,7 +1,7 @@
 package ru.artsec.Servers;
 
 import ru.artsec.ConnectionDatabase;
-import ru.artsec.JTreeReload;
+import ru.artsec.JTreeDelete;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -16,7 +16,7 @@ public class Server {
 
     Statement statement = ConnectionDatabase.getConnection().createStatement();
     DefaultMutableTreeNode servers = new DefaultMutableTreeNode("Серверы");
-    boolean flagCreateOrEdit = false;
+    static boolean flagCreateOrEdit = false;
     static String name;
 
     public Server() throws SQLException {
@@ -53,7 +53,8 @@ public class Server {
         });
 
         delete.addActionListener(e -> {
-            //
+
+            JTreeDelete jTreeDelete = new JTreeDelete(jTree);
         });
 
         jTree.addMouseListener(new MouseAdapter() {
@@ -80,6 +81,5 @@ public class Server {
         }
         addingServer.pack();
         addingServer.setVisible(true);
-        //JTreeReload jTreeReload = new JTreeReload(jTree, addingServer.getTextNameServer());
     }
 }
