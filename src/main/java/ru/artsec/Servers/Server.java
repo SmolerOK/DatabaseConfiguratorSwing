@@ -28,12 +28,10 @@ public class Server {
             DefaultMutableTreeNode temp = new DefaultMutableTreeNode(resultSet.getString("NAME_SERVER"));
             servers.add(temp);
         }
-        popupMenuServer(jTree);
         return servers;
     }
 
     public void popupMenuServer(JTree jTree) {
-
         JPopupMenu jPopupMenuCreate = new JPopupMenu("Create");
         JMenuItem create = new JMenuItem("Создать сервер");
         jPopupMenuCreate.add(create);
@@ -76,12 +74,12 @@ public class Server {
     private void AddingServersUp(JTree jTree) {
         AddingServer addingServer;
         try {
-            addingServer = new AddingServer();
+            addingServer = new AddingServer(jTree);
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
         addingServer.pack();
         addingServer.setVisible(true);
-        JTreeReload jTreeReload = new JTreeReload(jTree, addingServer.getTextNameServer());
+        //JTreeReload jTreeReload = new JTreeReload(jTree, addingServer.getTextNameServer());
     }
 }

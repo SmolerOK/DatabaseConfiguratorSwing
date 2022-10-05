@@ -1,6 +1,8 @@
 package ru.artsec.Servers;
 
 import ru.artsec.ConnectionDatabase;
+import ru.artsec.JTreeReload;
+import ru.artsec.MainWindow;
 
 import javax.swing.*;
 import java.sql.ResultSet;
@@ -15,14 +17,15 @@ public class AddingServer extends JDialog {
     private JTextField textIPServer;
     private JTextField textPortServer;
     private JCheckBox isActiveCheckBox;
-
-    Server servers = new Server();
     Statement statement = ConnectionDatabase.getConnection().createStatement();
-
-    public AddingServer() throws SQLException {
+    MainWindow mainWindow = new MainWindow();
+    public AddingServer(JTree jTree) throws SQLException {
         setContentPane(contentPane);
         setModal(true);
 
+        /*
+        Получаем информацию о выбранном сервере
+        */
         ResultSet resultSet1 = statement.executeQuery("" +
                 "SELECT * FROM ALL_SERVERS WHERE NAME_SERVER = '" + Server.name + "'");
         while (resultSet1.next()) {
@@ -33,7 +36,7 @@ public class AddingServer extends JDialog {
 
         buttonSave.addActionListener(e -> {
             try {
-                saveServer();
+                saveServer(jTree);
                 dispose();
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
@@ -45,7 +48,10 @@ public class AddingServer extends JDialog {
         });
     }
 
-    private void saveServer() throws SQLException {
+    /*
+    Метод, который добавляет в БД строку с информацие о сервере
+     */
+    private void saveServer(JTree jTree) throws SQLException {
         int value = 0;
         int selected = 0;
         ResultSet resultSet = statement.executeQuery("SELECT * FROM ALL_SERVERS");
@@ -60,15 +66,11 @@ public class AddingServer extends JDialog {
                 "INSERT INTO ALL_SERVERS (ID_SERVER, NAME_SERVER, IP_SERVER, PORT_SERVER, IS_ACTIVE_SERVER)" +
                 " VALUES (" + (value + 1) + ", '" + textNameServer.getText() + "', '" + textIPServer.getText() + "', '" + textPortServer.getText() + "', " + selected + ");"
         );
-
+        JTreeReload jTreeReload = new JTreeReload(jTree, textNameServer);
     }
 
-    public JTextField getTextNameServer() {
-        return textNameServer;
-    }
-
-    public static void main(String[] args) throws SQLException {
-        AddingServer dialog = new AddingServer();
+    public static void main(JTree jTree) throws SQLException {
+        AddingServer dialog = new AddingServer(jTree);
         dialog.setTitle("Создать сервер");
         dialog.pack();
         dialog.setVisible(true);

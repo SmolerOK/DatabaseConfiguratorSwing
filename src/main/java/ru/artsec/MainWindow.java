@@ -15,12 +15,16 @@ public class MainWindow extends JDialog {
     private JPanel contentPane;
     private JButton buttonCreate;
     private JButton buttonRemove;
+
+    public JTree getTree1() {
+        return tree1;
+    }
+
     private JTree tree1;
     private JTextArea textArea1;
     private JButton renameButton;
     private JScrollPane jScrollPane;
     private JPanel jPanel;
-
     Statement statement = ConnectionDatabase.getConnection().createStatement();
     Server servers = new Server();
 
@@ -33,6 +37,7 @@ public class MainWindow extends JDialog {
         tree1.setModel(defaultTreeModelRoot);
 
         root.add(servers.addServers(tree1));
+        servers.popupMenuServer(tree1);
 
         renameButton.addActionListener(e -> {
 
