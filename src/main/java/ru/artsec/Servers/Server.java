@@ -53,7 +53,14 @@ public class Server {
         });
 
         delete.addActionListener(e -> {
-
+            try {
+                statement.execute("" +
+                        "DELETE FROM ALL_SERVERS " +
+                        "WHERE NAME_SERVER = '" + name + "';"
+                );
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             JTreeDelete jTreeDelete = new JTreeDelete(jTree);
         });
 

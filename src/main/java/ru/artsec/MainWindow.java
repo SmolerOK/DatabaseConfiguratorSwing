@@ -13,11 +13,7 @@ import java.util.Objects;
 
 public class MainWindow extends JDialog {
     private JPanel contentPane;
-    private JButton buttonCreate;
-    private JButton buttonRemove;
     private JTree tree1;
-    private JTextArea textArea1;
-    private JButton renameButton;
     private JScrollPane jScrollPane;
     private JPanel jPanel;
     Statement statement = ConnectionDatabase.getConnection().createStatement();
