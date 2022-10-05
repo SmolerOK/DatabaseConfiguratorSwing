@@ -1,12 +1,11 @@
 package ru.artsec;
 
-import ru.artsec.Servers.Servers;
+
+import ru.artsec.Servers.Server;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -23,25 +22,17 @@ public class MainWindow extends JDialog {
     private JPanel jPanel;
 
     Statement statement = ConnectionDatabase.getConnection().createStatement();
-    Servers servers = new Servers();
+    Server servers = new Server();
+
 
     public MainWindow() throws SQLException {
         setContentPane(contentPane);
         setModal(true);
-
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Система");
         DefaultTreeModel defaultTreeModelRoot = new DefaultTreeModel(root);
         tree1.setModel(defaultTreeModelRoot);
 
         root.add(servers.addServers(tree1));
-
-        buttonCreate.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-                reloadJTree();
-            }
-        });
 
         renameButton.addActionListener(e -> {
 
@@ -96,10 +87,6 @@ public class MainWindow extends JDialog {
             defaultTreeModel.removeNodeFromParent(selectNode);
             defaultTreeModel.reload();
         });
-    }
-
-    public void reloadJTree() {
-
     }
 
     public static void main(String[] args) throws SQLException {

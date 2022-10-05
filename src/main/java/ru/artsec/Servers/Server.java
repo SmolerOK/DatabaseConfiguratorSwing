@@ -12,13 +12,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
 
-public class Servers {
+public class Server {
 
     Statement statement = ConnectionDatabase.getConnection().createStatement();
     DefaultMutableTreeNode servers = new DefaultMutableTreeNode("Серверы");
     boolean flagCreateOrEdit = false;
+    static String name;
 
-    public Servers() throws SQLException {
+    public Server() throws SQLException {
     }
 
     public DefaultMutableTreeNode addServers(JTree jTree) throws SQLException {
@@ -37,25 +38,24 @@ public class Servers {
         JMenuItem create = new JMenuItem("Создать сервер");
         jPopupMenuCreate.add(create);
 
-        JPopupMenu jPopupMenuEdit = new JPopupMenu("Create");
+        JPopupMenu jPopupMenuEditAndDelete = new JPopupMenu("Create");
         JMenuItem edit = new JMenuItem("Изменить");
-        jPopupMenuEdit.add(edit);
+        JMenuItem delete = new JMenuItem("Удалить");
+        jPopupMenuEditAndDelete.add(edit);
+        jPopupMenuEditAndDelete.add(delete);
 
         create.addActionListener(e -> {
-            AddingServer addingServer;
-            try {
-                addingServer = new AddingServer();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-            addingServer.pack();
-            addingServer.setVisible(true);
-
-            JTreeReload jTreeReload = new JTreeReload(jTree, addingServer.getTextNameServer());
+            flagCreateOrEdit = false;
+            AddingServersUp(jTree);
         });
 
         edit.addActionListener(e -> {
+            flagCreateOrEdit = true;
+            AddingServersUp(jTree);
+        });
 
+        delete.addActionListener(e -> {
+            //
         });
 
         jTree.addMouseListener(new MouseAdapter() {
@@ -66,13 +66,22 @@ public class Servers {
                 if (SwingUtilities.isRightMouseButton(e) && select.equals("Серверы")) {
                     jPopupMenuCreate.show(jTree, e.getX(), e.getY());
                 } else if (SwingUtilities.isRightMouseButton(e) && select.equals(select)) {
-                    jPopupMenuEdit.show(jTree, e.getX(), e.getY());
+                    jPopupMenuEditAndDelete.show(jTree, e.getX(), e.getY());
                 }
+                name = select;
             }
         });
     }
 
-    public boolean isFlagCreateOrEdit() {
-        return flagCreateOrEdit;
+    private void AddingServersUp(JTree jTree) {
+        AddingServer addingServer;
+        try {
+            addingServer = new AddingServer();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        addingServer.pack();
+        addingServer.setVisible(true);
+        JTreeReload jTreeReload = new JTreeReload(jTree, addingServer.getTextNameServer());
     }
 }

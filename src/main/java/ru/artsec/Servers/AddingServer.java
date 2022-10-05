@@ -1,7 +1,6 @@
 package ru.artsec.Servers;
 
 import ru.artsec.ConnectionDatabase;
-import ru.artsec.MainWindow;
 
 import javax.swing.*;
 import java.sql.ResultSet;
@@ -12,30 +11,38 @@ public class AddingServer extends JDialog {
     private JPanel contentPane;
     private JButton buttonSave;
     private JButton buttonCancel;
-
-
     private JTextField textNameServer;
     private JTextField textIPServer;
     private JTextField textPortServer;
     private JCheckBox isActiveCheckBox;
-    MainWindow mainWindow = new MainWindow();
-    Servers servers = new Servers();
+
+    Server servers = new Server();
     Statement statement = ConnectionDatabase.getConnection().createStatement();
 
     public AddingServer() throws SQLException {
         setContentPane(contentPane);
         setModal(true);
 
+        ResultSet resultSet1 = statement.executeQuery("" +
+                "SELECT * FROM ALL_SERVERS WHERE NAME_SERVER = '" + Server.name + "'");
+        while (resultSet1.next()) {
+            textNameServer.setText(resultSet1.getString("NAME_SERVER"));
+            textIPServer.setText(resultSet1.getString("IP_SERVER"));
+            textPortServer.setText(String.valueOf(resultSet1.getInt("PORT_SERVER")));
+        }
+
         buttonSave.addActionListener(e -> {
             try {
                 saveServer();
-                this.dispose();
+                dispose();
             } catch (SQLException ex) {
                 throw new RuntimeException(ex);
             }
         });
 
-        buttonCancel.addActionListener(e -> dispose());
+        buttonCancel.addActionListener(e -> {
+
+        });
     }
 
     private void saveServer() throws SQLException {
@@ -51,8 +58,9 @@ public class AddingServer extends JDialog {
 
         statement.execute("" +
                 "INSERT INTO ALL_SERVERS (ID_SERVER, NAME_SERVER, IP_SERVER, PORT_SERVER, IS_ACTIVE_SERVER)" +
-                " VALUES (" + value + 1 + ", '" + textNameServer.getText() + "', '" + textIPServer.getText() + "', '" + textPortServer.getText() + "', " + selected + ");"
+                " VALUES (" + (value + 1) + ", '" + textNameServer.getText() + "', '" + textIPServer.getText() + "', '" + textPortServer.getText() + "', " + selected + ");"
         );
+
     }
 
     public JTextField getTextNameServer() {
@@ -67,3 +75,4 @@ public class AddingServer extends JDialog {
         System.exit(0);
     }
 }
+
