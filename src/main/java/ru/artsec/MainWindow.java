@@ -6,19 +6,27 @@ import ru.artsec.Servers.Server;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Objects;
 
 public class MainWindow extends JDialog {
+    Statement statement = ConnectionDatabase.getConnection().createStatement();
+    //AddedRightMenuComponent addMenu = new AddedRightMenuComponent();
+    Server servers = new Server();
     private JPanel contentPane;
     private JTree tree1;
     private JScrollPane jScrollPane;
-    private JPanel jPanel;
-    Statement statement = ConnectionDatabase.getConnection().createStatement();
-    Server servers = new Server();
-
+    private JPanel mainJPanel;
+    private JScrollPane jScrollPaneMenuServer;
+    private JPanel Server;
+    private JPanel jPanelInfo;
+    private JTextField textNameServer;
+    private JTextField textIPServer;
+    private JTextField textPortServer;
+    private JCheckBox isActiveCheckBox;
+    private JLabel idView;
+    private JButton buttonSave;
+    private JButton buttonCancel;
 
     public MainWindow() throws SQLException {
         setContentPane(contentPane);
@@ -29,6 +37,7 @@ public class MainWindow extends JDialog {
 
         root.add(servers.addServers(tree1));
         servers.popupMenuServer(tree1);
+        servers.addedRightMenu(tree1, Server);
     }
 
     public static void main(String[] args) throws SQLException {

@@ -1,4 +1,4 @@
-package ru.artsec;
+package ru.artsec.JTreeAction;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

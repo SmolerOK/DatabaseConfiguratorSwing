@@ -1,7 +1,8 @@
 package ru.artsec.Servers;
 
+import ru.artsec.AddedRightMenuComponent;
 import ru.artsec.ConnectionDatabase;
-import ru.artsec.JTreeDelete;
+import ru.artsec.JTreeAction.JTreeDelete;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -10,14 +11,15 @@ import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Objects;
 
-public class Server {
+public class Server implements AddedRightMenuComponent {
 
-    Statement statement = ConnectionDatabase.getConnection().createStatement();
-    DefaultMutableTreeNode servers = new DefaultMutableTreeNode("Серверы");
     static boolean flagCreateOrEdit = false;
     static String name;
+    Statement statement = ConnectionDatabase.getConnection().createStatement();
+    DefaultMutableTreeNode servers = new DefaultMutableTreeNode("Серверы");
 
     public Server() throws SQLException {
     }
@@ -71,12 +73,54 @@ public class Server {
                 String select = String.valueOf(selectNode);
                 if (SwingUtilities.isRightMouseButton(e) && select.equals("Серверы")) {
                     jPopupMenuCreate.show(jTree, e.getX(), e.getY());
-                } else if (SwingUtilities.isRightMouseButton(e) && select.equals(select)) {
-                    jPopupMenuEditAndDelete.show(jTree, e.getX(), e.getY());
+                } else {
+                    try {
+                        if (SwingUtilities.isRightMouseButton(e) && gettingSelectedServer(jTree)) {
+                            jPopupMenuEditAndDelete.show(jTree, e.getX(), e.getY());
+                        }
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
                 name = select;
             }
         });
+    }
+
+    @Override
+    public void addedRightMenu(JTree jTree, JPanel jPanel) {
+        jTree.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    jPanel.setVisible(SwingUtilities.isLeftMouseButton(e) && gettingSelectedServer(jTree));
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+    @Override
+    public boolean gettingSelectedServer(JTree jTree) throws SQLException {
+        DefaultMutableTreeNode selectNode = (DefaultMutableTreeNode) Objects.requireNonNull(jTree.getSelectionPath()).getLastPathComponent();
+        String names = String.valueOf(selectNode);
+        boolean isName = false;
+        ArrayList<String> server = new ArrayList<>();
+
+        ResultSet resultSet = statement.executeQuery("" +
+                "SELECT * FROM ALL_SERVERS "
+        );
+        while (resultSet.next()) {
+            server.add(resultSet.getString("NAME_SERVER"));
+        }
+        for (String name : server) {
+            if (names.equals(name)) {
+                isName = true;
+                break;
+            }
+        }
+        return isName;
     }
 
     private void AddingServersUp(JTree jTree) {

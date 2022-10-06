@@ -1,8 +1,8 @@
 package ru.artsec.Servers;
 
 import ru.artsec.ConnectionDatabase;
-import ru.artsec.JTreeReload;
-import ru.artsec.JTreeRename;
+import ru.artsec.JTreeAction.JTreeReload;
+import ru.artsec.JTreeAction.JTreeRename;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.Objects;
 
 public class AddingServer extends JDialog {
+    Statement statement = ConnectionDatabase.getConnection().createStatement();
     private JPanel contentPane;
     private JButton buttonSave;
     private JButton buttonCancel;
@@ -20,8 +21,8 @@ public class AddingServer extends JDialog {
     private JTextField textPortServer;
     private JCheckBox isActiveCheckBox;
     private JLabel idView;
-    Statement statement = ConnectionDatabase.getConnection().createStatement();
-    Server server = new Server();
+    private JPanel jPanelInfo;
+
     public AddingServer(JTree jTree) throws SQLException {
         setContentPane(contentPane);
         setModal(true);
@@ -84,13 +85,5 @@ public class AddingServer extends JDialog {
         }
 
     }
-
-//    public static void main(JTree jTree) throws SQLException {
-//        AddingServer dialog = new AddingServer(jTree);
-//        dialog.setTitle("Создать сервер");
-//        dialog.pack();
-//        dialog.setVisible(true);
-//        System.exit(0);
-//    }
 }
 
