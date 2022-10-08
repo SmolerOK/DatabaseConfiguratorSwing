@@ -30,7 +30,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <component id="53825" class="javax.swing.JTree" binding="tree1" default-binding="true">
+              <component id="53825" class="javax.swing.JTree" binding="jTree" default-binding="true">
                 <constraints/>
                 <properties>
                   <alignmentX value="0.5"/>
@@ -54,11 +54,11 @@
             </properties>
             <border type="none"/>
             <children>
-              <grid id="743e6" binding="Server" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+              <grid id="743e6" binding="server" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
                 <constraints/>
                 <properties>
                   <autoscrolls value="true"/>
-                  <visible value="true"/>
+                  <visible value="false"/>
                 </properties>
                 <border type="none"/>
                 <children>
@@ -153,18 +153,28 @@
                         <constraints>
                           <grid row="5" column="1" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <enabled value="true"/>
+                        </properties>
                         <border type="none"/>
                         <children>
                           <component id="97e93" class="javax.swing.JButton" binding="buttonSave">
                             <constraints/>
                             <properties>
+                              <enabled value="true"/>
                               <text value="Сохранить"/>
+                            </properties>
+                          </component>
+                          <component id="d7824" class="javax.swing.JButton" binding="buttonEdit">
+                            <constraints/>
+                            <properties>
+                              <text value="Изменить"/>
                             </properties>
                           </component>
                           <component id="1a9f0" class="javax.swing.JButton" binding="buttonCancel">
                             <constraints/>
                             <properties>
+                              <enabled value="true"/>
                               <text value="Отменить"/>
                             </properties>
                           </component>

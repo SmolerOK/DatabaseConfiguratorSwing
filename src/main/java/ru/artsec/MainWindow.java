@@ -11,14 +11,13 @@ import java.sql.Statement;
 
 public class MainWindow extends JDialog {
     Statement statement = ConnectionDatabase.getConnection().createStatement();
-    //AddedRightMenuComponent addMenu = new AddedRightMenuComponent();
     Server servers = new Server();
     private JPanel contentPane;
-    private JTree tree1;
+    private JTree jTree;
     private JScrollPane jScrollPane;
     private JPanel mainJPanel;
     private JScrollPane jScrollPaneMenuServer;
-    private JPanel Server;
+    private JPanel server;
     private JPanel jPanelInfo;
     private JTextField textNameServer;
     private JTextField textIPServer;
@@ -27,17 +26,18 @@ public class MainWindow extends JDialog {
     private JLabel idView;
     private JButton buttonSave;
     private JButton buttonCancel;
+    private JButton buttonEdit;
 
     public MainWindow() throws SQLException {
         setContentPane(contentPane);
         setModal(true);
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("Система");
         DefaultTreeModel defaultTreeModelRoot = new DefaultTreeModel(root);
-        tree1.setModel(defaultTreeModelRoot);
+        jTree.setModel(defaultTreeModelRoot);
 
-        root.add(servers.addServers(tree1));
-        servers.popupMenuServer(tree1);
-        servers.addedRightMenu(tree1, Server);
+        root.add(servers.addServers());
+        servers.popupMenu(jTree, server, textNameServer, textIPServer, textPortServer, isActiveCheckBox, buttonSave, idView);
+        servers.addedRightMenu(jTree, server, idView, textNameServer, textIPServer, textPortServer, isActiveCheckBox, buttonSave, buttonCancel, buttonEdit);
     }
 
     public static void main(String[] args) throws SQLException {
